@@ -1,16 +1,17 @@
 package br.com.markFilmes.principal;
 
-import br.com.markFilmes.model.DadosFilme;
-import br.com.markFilmes.model.DadosGerais;
-import br.com.markFilmes.model.DadosSerie;
-import br.com.markFilmes.model.DadosTemporada;
+import br.com.markFilmes.model.*;
 import br.com.markFilmes.service.ConsumoApi;
 import br.com.markFilmes.service.ConverteDados;
 
 import javax.sound.midi.Soundbank;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Principal {
 
@@ -49,6 +50,43 @@ public class Principal {
             }
 
             temporadas.forEach(System.out::println);
+            temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+
+            List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+                    .flatMap(t -> t.episodios().stream())
+                            .collect(Collectors.toList());
+
+            System.out.println("\nTop 5 melhores episódios:");
+            dadosEpisodios.stream()
+                    .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+                    .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+                    .limit(5)
+                    .forEach(System.out::println);
+
+            List<Episodio> episodios = temporadas.stream()
+                    .flatMap(t -> t.episodios().stream()
+                            .map(d -> new Episodio(t.numero(),d))
+                    ).collect(Collectors.toList());
+            episodios.forEach(System.out::println);
+
+            System.out.println("A partir de qual ano você deseja ver os episódios? ");
+            var ano = Integer.parseInt(leitura.nextLine());
+            leitura.nextLine();
+            LocalDate dataBusca = LocalDate.of(ano, 1, 1);
+
+            DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            episodios.stream()
+                    .filter(e -> e.getDataDeLancamento() != null && e.getDataDeLancamento().isAfter(dataBusca))
+                    .forEach(e -> {
+                        System.out.println(
+                                "Temporada: " + e.getTemporada() +
+                                        " Episódio: " + e.getTitulo() +
+                                        " Data de lançamento: " + e.getDataDeLancamento().format(formatador)
+                        );
+                    });
+
+
+
 
         } else if (geral.tipo().equalsIgnoreCase("movie")) {
 
