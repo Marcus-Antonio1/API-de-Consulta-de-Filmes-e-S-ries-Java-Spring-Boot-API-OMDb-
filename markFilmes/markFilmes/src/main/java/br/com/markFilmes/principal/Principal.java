@@ -43,6 +43,7 @@ public class Principal {
                     5 - Listar filmes buscados
                     6 - Buscar por ator
                     7 - Buscar top 5 títulos
+                    8 - Buscar por gênero
                     
                     0 - Sair
                     """;
@@ -72,6 +73,9 @@ public class Principal {
                     break;
                 case 7:
                     buscarTop5Titulos();
+                    break;
+                case 8:
+                    buscarPorGenero();
                     break;
                 case 0:
                     System.out.println("Saindo...");
@@ -263,6 +267,36 @@ public class Principal {
                         System.out.println("Filme: " + t);
                     }
                 });
+    }
+
+    // ========================= CATEGORIA/GÊNERO =========================
+
+    private void buscarPorGenero() {
+        System.out.println("Digite o gênero (ex: ACAO, COMEDIA, DRAMA): ");
+        var generoInput = leitura.nextLine().toUpperCase();
+
+        Categoria categoria;
+
+        try {
+            categoria = Categoria.fromString(generoInput);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Gênero inválido!");
+            return;
+        }
+
+        List<Serie> series = repositorioSerie.findByGenero(categoria);
+        List<Filme> filmes = repositorioFilme.findByGenero(categoria);
+
+        if (series.isEmpty() && filmes.isEmpty()) {
+            System.out.println("Nenhum título encontrado para esse gênero.");
+            return;
+        }
+
+        System.out.println("\n=== SÉRIES ===");
+        series.forEach(System.out::println);
+
+        System.out.println("\n=== FILMES ===");
+        filmes.forEach(System.out::println);
     }
 
 }
