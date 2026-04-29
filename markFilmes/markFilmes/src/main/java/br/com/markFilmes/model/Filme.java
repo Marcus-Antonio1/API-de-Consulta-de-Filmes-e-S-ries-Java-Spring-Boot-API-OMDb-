@@ -1,7 +1,6 @@
 package br.com.markFilmes.model;
 
 import jakarta.persistence.*;
-import java.util.OptionalDouble;
 
 @Entity
 @Table(name = "filmes")

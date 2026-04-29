@@ -1,10 +1,7 @@
 package br.com.markFilmes.model;
 
-import br.com.markFilmes.service.ConsultaChatGPT;
 import br.com.markFilmes.service.traducao.ConsultaMyMemory;
-import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
-import jdk.jfr.Category;
 
 import java.util.ArrayList;
 import java.util.List;
