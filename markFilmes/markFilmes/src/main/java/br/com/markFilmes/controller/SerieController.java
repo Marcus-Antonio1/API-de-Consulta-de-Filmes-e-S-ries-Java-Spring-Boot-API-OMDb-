@@ -1,14 +1,10 @@
 package br.com.markFilmes.controller;
 
-
 import br.com.markFilmes.dto.EpisodioDTO;
 import br.com.markFilmes.dto.SerieDTO;
 import br.com.markFilmes.service.SerieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,12 +13,11 @@ import java.util.stream.Collectors;
 @RestController
 public class SerieController {
 
-
     @Autowired
     private SerieService servico;
 
     @GetMapping
-    public List<SerieDTO> obterSeries(){
+    public List<SerieDTO> obterSeries() {
         return servico.obterTodasAsSeries();
     }
 
@@ -45,6 +40,7 @@ public class SerieController {
     public List<EpisodioDTO> obterTemporadas(@PathVariable Long id) {
         return servico.obterTemporadas(id);
     }
+
     @GetMapping("/{id}/temporadas/{numero}")
     public List<EpisodioDTO> obterTemporadaPorNumero(
             @PathVariable Long id,
@@ -57,10 +53,14 @@ public class SerieController {
         }
 
         Integer temp = Integer.valueOf(numero);
-
         return episodios.stream()
                 .filter(e -> e.temporada().equals(temp))
                 .collect(Collectors.toList());
     }
-}
 
+    // NOVO: filtro por categoria — usado pelo select do front-end
+    @GetMapping("/categoria/{genero}")
+    public List<SerieDTO> obterPorCategoria(@PathVariable String genero) {
+        return servico.obterPorCategoria(genero);
+    }
+}
