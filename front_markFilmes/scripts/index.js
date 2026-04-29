@@ -1,95 +1,100 @@
 import getDados from "./getDados.js";
 
-// Mapeia os elementos DOM que você deseja atualizar
 const elementos = {
     top5: document.querySelector('[data-name="top5"]'),
     lancamentos: document.querySelector('[data-name="lancamentos"]'),
-    series: document.querySelector('[data-name="series"]')
-};
-
-const elementos = {
-    top5: document.querySelector('[data-name="top5"]'),
-    lancamentos: document.querySelector('[data-name="lancamentos"]'),
+    series: document.querySelector('[data-name="series"]'),
     filmes: document.querySelector('[data-name="filmes"]')
 };
 
-// Função para criar a lista de filmes
-
-// Função para criar a lista de filmes
-function criarListaFilmes(elemento, dados) {
-    // Verifique se há um elemento <ul> dentro da seção
-    const ulExistente = elemento.querySelector('ul');
-
-    // Se um elemento <ul> já existe dentro da seção, remova-o
-    if (ulExistente) {
-        elemento.removeChild(ulExistente);
-    }
+function criarListaSeries(elemento, dados) {
+    if (!elemento) return;
 
     const ul = document.createElement('ul');
     ul.className = 'lista';
-    const listaHTML = dados.map((filme) => `
+
+    ul.innerHTML = dados.map(item => `
         <li>
-            <a href="/detalhes.html?id=${filme.id}">
-                <img src="${filme.poster}" alt="${filme.titulo}">
+            <a href="/detalhes.html?id=${item.id}">
+                <img src="${item.poster}" alt="${item.titulo}">
             </a>
         </li>
     `).join('');
 
-    ul.innerHTML = listaHTML;
+    elemento.innerHTML = '';
     elemento.appendChild(ul);
 }
 
-// Função genérica para tratamento de erros
+function criarListaFilmes(elemento, dados) {
+    if (!elemento) return;
+
+    const ul = document.createElement('ul');
+    ul.className = 'lista';
+
+    ul.innerHTML = dados.map(item => `
+        <li>
+            <a href="/detalhes-filmes.html?id=${item.id}">
+                <img src="${item.poster}" alt="${item.titulo}">
+            </a>
+        </li>
+    `).join('');
+
+    elemento.innerHTML = '';
+    elemento.appendChild(ul);
+}
+
+// SERIES
+function carregarSeries() {
+    const urls = ['/series/top5', '/series/lancamentos', '/series'];
+
+    Promise.all(urls.map(url => getDados(url)))
+        .then(data => {
+            criarListaSeries(elementos.top5, data[0]);
+            criarListaSeries(elementos.lancamentos, data[1]);
+            criarListaSeries(elementos.series, data[2].slice(0, 5));
+        });
+}
+
+//FILMES
+function carregarFilmes() {
+    if (!elementos.filmes) return;
+
+    getDados('/filmes')
+        .then(data => {
+            criarListaFilmes(elementos.filmes, data.slice(0, 5));
+        });
+}
+
+// EXECUTA
+carregarSeries();
+carregarFilmes();
+
+// ERRO
 function lidarComErro(mensagemErro) {
     console.error(mensagemErro);
 }
 
+// FILTRO
 const categoriaSelect = document.querySelector('[data-categorias]');
-const sectionsParaOcultar = document.querySelectorAll('.section'); // Adicione a classe CSS 'hide-when-filtered' às seções e títulos que deseja ocultar.
+const sectionsParaOcultar = document.querySelectorAll('.section');
 
 categoriaSelect.addEventListener('change', function () {
     const categoria = document.querySelector('[data-name="categoria"]');
     const categoriaSelecionada = categoriaSelect.value;
 
     if (categoriaSelecionada === 'todos') {
-
-        for (const section of sectionsParaOcultar) {
-            section.classList.remove('hidden')
-        }
+        sectionsParaOcultar.forEach(section => section.classList.remove('hidden'));
         categoria.classList.add('hidden');
-
     } else {
+        sectionsParaOcultar.forEach(section => section.classList.add('hidden'));
+        categoria.classList.remove('hidden');
 
-        for (const section of sectionsParaOcultar) {
-            section.classList.add('hidden')
-        }
-
-        categoria.classList.remove('hidden')
-        // Faça uma solicitação para o endpoint com a categoria selecionada
         getDados(`/series/categoria/${categoriaSelecionada}`)
             .then(data => {
-                criarListaFilmes(categoria, data);
+                criarLista(categoria, data); // corrigido aqui
             })
-            .catch(error => {
-                lidarComErro("Ocorreu um erro ao carregar os dados da categoria.");
+            .catch(() => {
+                lidarComErro("Erro ao carregar categoria");
             });
     }
 });
-
-// Array de URLs para as solicitações
-geraSeries();
-function geraSeries() {
-    const urls = ['/series/top5', '/series/lancamentos', '/series'];
-
-    // Faz todas as solicitações em paralelo
-    Promise.all(urls.map(url => getDados(url)))
-        .then(data => {
-            criarListaFilmes(elementos.top5, data[0]);
-            criarListaFilmes(elementos.lancamentos, data[1]);
-            criarListaFilmes(elementos.series, data[2].slice(0, 5));
-        })
-        .catch(error => {
-            lidarComErro("Ocorreu um erro ao carregar os dados.");
-        });
-
-}

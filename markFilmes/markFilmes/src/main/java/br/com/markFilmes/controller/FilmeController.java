@@ -17,7 +17,7 @@ public class FilmeController {
     @Autowired
     private FilmeRepository repositorio;
 
-    @GetMapping
+    @GetMapping("/{id}")
     public List<Filme> obterFilmes() {
         return repositorio.findAll();
     }

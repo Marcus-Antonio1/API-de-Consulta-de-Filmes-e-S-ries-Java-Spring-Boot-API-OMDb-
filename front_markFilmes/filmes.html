@@ -4,14 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Ícones -->
     <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+
+    <!-- Fonte -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="css/home.css">
-    <title>MarkFilmes</title>
+
+    <title>Filmes - MarkFilmes</title>
 </head>
 
 <body>
@@ -19,6 +24,8 @@
         <div class="cabecalho__logo">
             <img src="./img/logo.png" alt="Logo MarkFilmes">
             <h1>MarkFilmes</h1>
+
+            <!-- 🔥 FILTRO POR CATEGORIA -->
             <select data-categorias>
                 <option value="todos">Categorias</option>
                 <option value="comédia">Comédia</option>
@@ -29,48 +36,46 @@
             </select>
         </div>
 
+        <!-- Ícones -->
         <div class="cabecalho__opcoes">
-            <span class="material-symbols-outlined">
-                search
-            </span>
+            <span class="material-symbols-outlined">search</span>
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="material-symbols-outlined">account_circle</span>
+        </div>
 
-            <span class="material-symbols-outlined">
-                notifications
-            </span>
-
-            <span class="material-symbols-outlined">
-                account_circle
-            </span>
+        <!-- 🔥 NAVEGAÇÃO -->
+        <div class="cabecalho__opcoes">
+            <a href="index.html">Home</a>
+            <a href="filmes.html">Filmes</a>
         </div>
     </header>
 
     <main>
+
+        <!-- 🔥 LANÇAMENTOS -->
         <section data-name="lancamentos" class="section">
-            <h2>
-                Lançamentos no MarkFilmes
-            </h2>
-
-
+            <h2>Lançamentos</h2>
         </section>
 
+        <!-- 🔥 TOP 5 -->
         <section data-name="top5" class="section">
-            <h2>
-                Titulos populares no MarkFilmes
-            </h2>
-
+            <h2>Populares</h2>
         </section>
 
-        <section data-name="series" class="section">
-            <h2>
-                Titulos no MarkFilmes
-            </h2>
+        <!-- 🔥 TODOS OS FILMES -->
+        <section data-name="filmes" class="section">
+            <h2>Todos os Filmes</h2>
         </section>
 
+        <!-- 🔥 RESULTADO DE CATEGORIA -->
         <section data-name="categoria" class="hidden pesquisa">
-            <h2>Titulos no MarkFilmes</h2>
+            <h2>Filmes por Categoria</h2>
         </section>
+
     </main>
-    <script src="./scripts/index.js" type="module"></script>
+
+    <!-- JS -->
+    <script src="./scripts/filmes.js" type="module"></script>
 </body>
 
 </html>
